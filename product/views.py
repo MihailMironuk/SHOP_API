@@ -1,6 +1,7 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework import generics
 from product.serializers import CategorySerializer, ProductSerializer, ReviewSerializer
 from product.models import Category, Product, Review
 
@@ -9,6 +10,7 @@ from product.models import Category, Product, Review
 @api_view(http_method_names=['GET'])
 def categories_list_api_view(request):
     categories = Category.objects.all()
+    serializer = CategorySerializer(categories, many=True)
     data = CategorySerializer(categories, many=True).data
     return Response(data=data, status=status.HTTP_200_OK)
 
@@ -51,3 +53,8 @@ def reviews_detail_api_view(request, id):
     views = Review.objects.get(id=id)
     data = ReviewSerializer(views, many=False).data
     return Response(data=data)
+
+
+class ProductReviewListView(generics.ListAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer

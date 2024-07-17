@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 
 
 class Category(models.Model):
@@ -21,6 +22,11 @@ class Product(models.Model):
 class Review(models.Model):
     text = models.TextField()
     product = models.ForeignKey(Product, related_name='reviews', on_delete=models.CASCADE)
+    stars = models.PositiveIntegerField(default=1)
+
+    def clean(self):
+        if not (1 <= self.stars <= 5):
+            raise ValidationError('Stars must be between 1 and 5.')
 
     def __str__(self):
-        return f'Review for {self.product.title}'
+        return f'{self.product.title}: {self.stars} stars'
