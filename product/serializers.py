@@ -5,7 +5,7 @@ from product.models import Category, Product, Review
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
-        fields = ['text', 'product', 'stars']
+        fields = ['text', 'product', 'stars', 'id']
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -13,7 +13,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ['id', 'name', 'products_count']
+        fields = ['name', 'products_count', 'id']
 
     def get_products_count(self, obj):
         return Product.objects.filter(category=obj).count()
