@@ -1,15 +1,52 @@
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-from product.serializers import CategorySerializer, ProductSerializer, ReviewSerializer, CategoryValidateSerializer, ProductValidateSerializer, ReviewValidateSerializer
 from product.models import Category, Product, Review
+
+from product.serializers import (
+    CategorySerializer, ProductSerializer, ReviewSerializer,
+    CategoryValidateSerializer, ProductValidateSerializer, ReviewValidateSerializer
+)
+
+
+class CategoryListCreateAPIView(ListCreateAPIView):
+    serializer_class = CategorySerializer
+    queryset = Category.objects.all()
+
+
+class CategoryDetailAPIView(RetrieveUpdateDestroyAPIView):
+    serializer_class = CategorySerializer
+    queryset = Category.objects.all()
+    lookup_field = 'id'
+
+
+class ProductListCreateAPIView(ListCreateAPIView):
+    serializer_class = ProductSerializer
+    queryset = Product.objects.all()
+
+
+class ProductDetailAPIView(RetrieveUpdateDestroyAPIView):
+    serializer_class = ProductSerializer
+    queryset = Product.objects.all()
+    lookup_field = 'id'
+
+
+class ReviewListCreateAPIView(ListCreateAPIView):
+    serializer_class = ReviewSerializer
+    queryset = Review.objects.all()
+
+
+class ReviewDetailAPIView(RetrieveUpdateDestroyAPIView):
+    serializer_class = ReviewSerializer
+    queryset = Review.objects.all()
+    lookup_field = 'id'
 
 
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 def categories_list_api_view(request):
-
     if request.method == 'GET':
         category = Category.objects.all()
         data = CategorySerializer(category, many=True).data
@@ -25,7 +62,6 @@ def categories_list_api_view(request):
 
 @api_view(['GET', 'POST'])
 def products_list_api_view(request):
-
     if request.method == 'GET':
         products = Product.objects.all()
         data = ProductSerializer(products, many=True).data
@@ -41,7 +77,6 @@ def products_list_api_view(request):
 
 @api_view(['GET', 'POST'])
 def reviews_list_api_view(request):
-
     if request.method == 'GET':
         reviews = Review.objects.all()
         data = ReviewSerializer(reviews, many=True).data
